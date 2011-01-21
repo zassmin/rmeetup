@@ -7,22 +7,35 @@ module RMeetup
     # Used to access result attributes as well
     # as progammatically fetch relative data types
     # based on this comment.
+    
+    # Edited by Jason Berlinsky on 1/20/11 to allow for arbitrary data access
+    # See http://www.meetup.com/meetup_api/docs/ew/comment/ for available fields
+    
     class Comment
-      attr_accessor :name, :link, :comment, :rating, :descr, :created, :lat, :lon, :country, :city, :state
+      
+      attr_accessor :comment
       
       def initialize(comment = {})
-        self.name         = comment['name']
-        self.link         = comment['link']
-        self.comment      = comment['comment']
-        self.rating       = comment['rating'].to_i
-        self.descr        = comment['descr']
-        self.created      = DateTime.parse(comment['created'])
-        self.lat          = comment['lat'].to_f
-        self.lon          = comment['lon'].to_f
-        self.country      = comment['country']
-        self.state        = comment['state']
-        self.city         = comment['city']
+        self.comment = comment
       end
+      
+      def method_missing(id, *args)
+        return city[id.id2name].toutf8
+      end
+      
+      # Special accessors that need typecasting or other parsing
+      
+      def rating
+        return self.comment['rating'].to_i
+      end
+      def created
+        return DateTime.parse(self.comment['created'])
+      end
+      def lat
+        return self.comment['lat'].to_f
+      end
+      def lon
+        return self.comment['lon'].to_f
     end
   end
 end
