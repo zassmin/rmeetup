@@ -7,26 +7,40 @@ module RMeetup
     # Used to access result attributes as well
     # as progammatically fetch relative data types
     # based on this group.
+    
+    # Edited by Jason Berlinsky on 1/20/11 to allow for arbitrary data access
+    # See http://www.meetup.com/meetup_api/docs/groups/ for available fields
+    
     class Group
-      attr_accessor :id, :name, :link, :updated, :members, :created, :photo_url, :description,
-                    :lat, :lon, :country, :state, :city, :zip, :organizerProfileUrl, :daysleft
+      attr_accessor :group
       
       def initialize(group = {})
-        self.id           = group['id'].to_i
-        self.name         = group['name']
-        self.link         = group['link']
-        self.updated      = DateTime.parse(group['updated'])
-        self.members      = group['members'].to_i
-        self.created      = DateTime.parse(group['created'])
-        self.photo_url    = group['photo_url']
-        self.description  = group['description']
-        self.lat          = group['lat'].to_f
-        self.lon          = group['lon'].to_f
-        self.country      = group['country']
-        self.state        = group['state']
-        self.city         = group['city']
-        self.zip          = group['zip']
-        self.daysleft     = group['daysleft'].to_i
+        self.group = group
+      end
+      
+      def method_missing(id, *args)
+        return self.group[id.id2name].toutf8
+      end
+      
+      # Special accessors that need typecasting or other parsing
+      
+      def id
+        return self.group['id'].to_i
+      end
+      def updated
+        return DateTime.parse(self.group['updated'])
+      end
+      def created
+        return DateTime.parse(self.group['created'])
+      end
+      def lat
+        return self.group['lat'].to_f
+      end
+      def lon
+        return self.group['lon'].to_f
+      end
+      def daysleft
+        return self.group['daysleft'].to_i
       end
     end
   end
