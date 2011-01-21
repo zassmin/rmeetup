@@ -7,18 +7,28 @@ module RMeetup
     # Used to access result attributes as well
     # as progammatically fetch relative data types
     # based on this rsvp.
+    
+    # Edited by Jason Berlinsky on 1/20/11 to allow for arbitrary data access
+    # See http://www.meetup.com/meetup_api/docs/ew/rsvps/ for available fields
+    
     class Rsvp
-      attr_accessor :name, :link, :comment, :lat, :lon, :country, :city, :state
+      attr_accessor :rsvp
       
       def initialize(rsvp = {})
-        self.name         = rsvp['name']
-        self.link         = rsvp['link']
-        self.comment      = rsvp['comment']
-        self.lat          = rsvp['lat'].to_f
-        self.lon          = rsvp['lon'].to_f
-        self.country      = rsvp['country']
-        self.state        = rsvp['state']
-        self.city         = rsvp['city']
+        self.rsvp = rsvp
+      end
+      
+      def method_missing(id, *args)
+        return self.rsvp[id.id2name].toutf8
+      end
+      
+      # Special accessors that need typecasting or other parsing
+      
+      def lat
+        return self.rsvp['lat'].to_f
+      end
+      def lon
+        return self.rsvp['lon'].to_f
       end
     end
   end
