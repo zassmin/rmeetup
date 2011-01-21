@@ -20,7 +20,7 @@ module RMeetup
       end
       
       def method_missing(id, *args)
-        return self.comment[id.id2name].toutf8
+        return self.comment[id.id2name]
       end
       
       # Special accessors that need typecasting or other parsing
@@ -36,6 +36,7 @@ module RMeetup
       end
       def lon
         return self.comment['lon'].to_f
+      end
     end
   end
 end
