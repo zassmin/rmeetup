@@ -7,19 +7,31 @@ module RMeetup
     # Used to access result attributes as well
     # as progammatically fetch relative data types
     # based on this member.
+    
+    # Edited by Jason Berlinsky on 1/20/11 to allow for arbitrary data access
+    # See http://www.meetup.com/meetup_api/docs/members/ for available fields
+    
     class Member
-      attr_accessor :id, :name, :link, :bio, :lat, :lon, :country, :city, :state
+      attr_accessor :member
       
       def initialize(member = {})
-        self.id           = member['id'].to_i
-        self.name         = member['name']
-        self.link         = member['link']
-        self.bio          = member['bio']
-        self.lat          = member['lat'].to_f
-        self.lon          = member['lon'].to_f
-        self.country      = member['country']
-        self.state        = member['state']
-        self.city         = member['city']
+        self.member = member
+      end
+      
+      def method_missing(id, *args)
+        return self.member[id.id2name].toutf8
+      end
+      
+      # Special accessors that need typecasting or other parsing
+      
+      def id
+        return self.member['id'].to_i
+      end
+      def lat
+        return self.member['lat'].to_f
+      end
+      def lon
+        return self.member['lon'].to_f
       end
     end
   end
