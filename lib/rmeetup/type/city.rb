@@ -20,19 +20,19 @@ module RMeetup
       end
       
       def method_missing(id, *args)
-        return city[id.id2name].toutf8
+        return self.city[id.id2name].toutf8
       end
       
       # Special accessors that need typecasting or other parsing
       
       def lat
-        return city['lat'].to_f
+        return self.city['lat'].to_f
       end
       def lon
-        return city['lon'].to_f
+        return self.city['lon'].to_f
       end
       def members
-        return city['members'].to_i
+        return self.city['members'].to_i
       end
     end
   end
