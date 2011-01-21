@@ -7,23 +7,40 @@ module RMeetup
     # Used to access result attributes as well
     # as progammatically fetch relative data types
     # based on this event.
+    
+    # Edited by Jason Berlinsky on 1/20/11 to allow for arbitrary data access
+    # See http://www.meetup.com/meetup_api/docs/events/ for available fields
+    
     class Event
-      attr_accessor :id, :name, :updated, :time, :photo_url, :lat, :lon, :event_url,
-                    :rsvpcount, :fee, :feecurrency, :feedesc
+      
+      attr_accessor :event
       
       def initialize(event = {})
-        self.id           = event['id'].to_i
-        self.name         = event['name']
-        self.updated      = DateTime.parse(event['updated'])
-        self.time         = DateTime.parse(event['time'])
-        self.photo_url    = event['photo_url']
-        self.lat          = event['lat'].to_f
-        self.lon          = event['lon'].to_f
-        self.event_url    = event['event_url']
-        self.rsvpcount    = event['rsvpcount'].to_i
-        self.fee          = event['fee']
-        self.feecurrency  = event['feecurrency']
-        self.feedesc      = event['feedesc']
+        self.event = event
+      end
+      
+      def method_missing(id, *args)
+        return event[id.id2name].toutf8
+      end
+      
+      # Special accessors that need typecasting or other parsing
+      def id
+        self.event['id'].to_i
+      end
+      def lat
+        self.event['lat'].to_f
+      end
+      def lon
+        self.event['lon'].to_f
+      end
+      def rsvpcount
+        self.event['rsvpcount'].to_i
+      end
+      def updated
+        DateTime.parse(self.event['updated'])
+      end
+      def time
+        DateTime.parse(self.event['time'])
       end
     end
   end
