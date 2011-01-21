@@ -7,15 +7,25 @@ module RMeetup
     # Used to access result attributes as well
     # as progammatically fetch relative data types
     # based on this photo.
+    
+    # Edited by Jason Berlinsky on 1/20/11 to allow for arbitrary data access
+    # See http://www.meetup.com/meetup_api/docs/photos/ for available fields
+    
     class Photo
-      attr_accessor :albumtitle, :link, :member_url, :descr, :created
+      attr_accessor :photo
       
       def initialize(photo = {})
-        self.albumtitle   = photo['albumtitle']
-        self.link         = photo['link']
-        self.member_url   = photo['member_url']
-        self.descr        = photo['descr']
-        self.created      = DateTime.parse(photo['created'])
+        self.photo = photo
+      end
+      
+      def method_missing(id, *args)
+        return self.photo[id.id2name].toutf8
+      end
+      
+      # Special accessors that need typecasting or other parsing
+      
+      def created
+        return DateTime.parse(self.photo['created'])
       end
     end
   end
