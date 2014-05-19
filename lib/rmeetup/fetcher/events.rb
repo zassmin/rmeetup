@@ -4,7 +4,7 @@ module RMeetup
       def initialize
         @type = :events
       end
-      
+
       # Turn the result hash into a Event Class
       def format_result(result)
         RMeetup::Type::Event.new(result)
